@@ -16,8 +16,11 @@ exports.fileCreate = (req, res) => {
     user_fk:req.body.user_fk,
     tray_fk:req.body.tray_fk,
   };
-
   // Save File in the database
+  fileOp.copyFile(directoryPath+req.body.filename, directoryPath+"/profile/"+file.filename, (err) => {
+    if (err) throw err;
+    console.log('file copied');
+  });
   files.create(file)
       .then(data => {
           res.send(data);
@@ -44,7 +47,7 @@ exports.findOne = (req, res) => {
   }
 
   exports.updateFile = (req, res) => {
-    const uploadedFile = directoryPath + req.body.filename;
+    const uploadedFile = baseUrl + req.body.filename;
     const id = req.params.id;
     const file = {
         filename: req.body.filename,
@@ -54,11 +57,10 @@ exports.findOne = (req, res) => {
     let query = `UPDATE files SET filepath = '${file.filepath}',filename = '${file.filename}' WHERE id = ${id}`;
     sequelize.query(query).then(data => {
         if (data[1].rowCount >=1) {
-            fileOp.rename(uploadedFile, directoryPath+"/profile/"+file.filename, (err) => {
-              if (err) throw err;
-              console.log('Rename complete!');
-          })
-
+          fileOp.copyFile(directoryPath+req.body.filename, directoryPath+"/profile/"+file.filename, (err) => {
+            if (err) throw err;
+            console.log('file copied');
+          });
           res.send({
             message: "profile password was updated successfully."
           });
