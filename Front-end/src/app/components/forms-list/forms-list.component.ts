@@ -6,6 +6,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
 import { MatPaginator } from '@angular/material/paginator';
+import { environment } from 'src/environments/environment';
+const columnLength=environment.columnLength;
 interface CustomColumn {
   possition: number;
   name: string;
@@ -158,17 +160,14 @@ export class FormListComponent implements OnInit {
       rowDataList.push(rowdata);
     });
 
-    console.log(rowDataList)
-
     //Extract column names
     this.displayedColumns = Object.getOwnPropertyNames(rowDataList[0])
-    if(this.displayedColumns.length>4){
+    if(this.displayedColumns.length>columnLength){
       this.showHideColumn=true;
       this.initializeColumnProperties();
     }
     this.dataSource.data = rowDataList
   }
-
   
   initializeColumnProperties() {
     

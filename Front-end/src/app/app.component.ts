@@ -11,6 +11,8 @@ import { UserService } from './services/user.service';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { Plan } from './models/plan.model';
+import { environment } from 'src/environments/environment';
+const userLogin = environment.isUserLoggedIn;
 
 
 @Component({
@@ -93,7 +95,7 @@ constructor(private menuService: MenuService,
     this.PlanObj = JSON.parse(sessionStorage.getItem('planObj'));
     this.UserObj = JSON.parse(sessionStorage.getItem('userObj'));
     this.RoleObj = JSON.parse(sessionStorage.getItem('roleObj'));
-    if(this.RoleObj[0].name == 'SuperAdmin'){
+    if(this.RoleObj[0].name == userLogin){
       this.isSuperAdmin=true;
       this.isOtherUser=false;
     }
@@ -209,7 +211,7 @@ constructor(private menuService: MenuService,
         .subscribe(
           data => {
             this.planList = data;
-            if(this.RoleObj[0].name == 'SuperAdmin'){
+            if(this.RoleObj[0].name == userLogin){
               this.isPlanImg=false;
             }
             this.plan.planImg=this.PlanObj[0].planImg;
