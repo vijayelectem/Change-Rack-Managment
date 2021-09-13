@@ -2,14 +2,16 @@
       <div *ngIf="UserObj">
         <div class="header navbar  navbar-light menu-box shadow-sm">
             <div class="header-container" style="width:100%">
-                <div >
-                    <ul class="nav-left">
-                        <li class="user-profile dropdown mr-5">
-                            <a href="" >
-                                <img [src]="plan.planImg"  class="profile-img img-fluid" width="150" height="100" alt="">
-                            </a>
-                        </li> 
-                    </ul>
+                <div>
+                    <div *ngIf="isPlanImg" >
+                        <ul class="nav-left">
+                            <li class="user-profile dropdown mr-5">
+                                <a href="" >
+                                    <img [src]="plan.planImg"  class="profile-img img-fluid" width="150" height="100" alt="">
+                                </a>
+                            </li> 
+                        </ul>
+                    </div>
                     <ul  class="nav-left mr-2" *ngFor="let item of menuObject ;">
                         <li style="line-height: 65px;">
                             <button class="btn btn-primaryy rounded-pill px-3 mb-2 mb-lg-0"   (click)="refreshPage(item.action)">
@@ -62,22 +64,29 @@
                         </ul>
                     </li>
                     <li class="user-profile dropdown">
-                        <a href="" class="dropdown-toggle" data-toggle="dropdown">
-                            <img [src]="profile.image"  class="profile-img img-fluid" width="100" height="100" alt="">
-                            <div class="user-info">
-                                <span class="name pdd-right-5">{{UserObj.username}}</span>
-                                <i class="ti-angle-down font-size-10"></i>
-                            </div>
-                        </a>
+                            <a *ngIf="isSuperAdmin" href="" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="http://localhost:8080/files/bell-2-48.jpg"  class="profile-img img-fluid" width="100" height="100" alt="">
+                                <div class="user-info">
+                                    <span class="name pdd-right-5">{{UserObj.username}}</span>
+                                    <i class="ti-angle-down font-size-10"></i>
+                                </div>
+                            </a>
+                            <a *ngIf="isOtherUser" href="" class="dropdown-toggle" data-toggle="dropdown">
+                                <img [src]="profile.image"  class="profile-img img-fluid" width="100" height="100" alt="">
+                                <div class="user-info">
+                                    <span class="name pdd-right-5">{{UserObj.username}}</span>
+                                    <i class="ti-angle-down font-size-10"></i>
+                                </div>
+                            </a>
                         <ul class="dropdown-menu">                        
                             <li>
-                                <a (click)="fetchUserProfileFK()">
+                                <a *ngIf="isOtherUser" (click)="fetchUserProfileFK()">
                                     <i class="ti-user pdd-right-10"></i>
                                     <span>Profile</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="" data-bs-toggle="modal" data-bs-target="#changePassword">
+                                <a *ngIf="isOtherUser" class="" data-bs-toggle="modal" data-bs-target="#changePassword">
                                     <i class="ti-user pdd-right-10"></i>
                                     <span>Change Password</span>
                                 </a>

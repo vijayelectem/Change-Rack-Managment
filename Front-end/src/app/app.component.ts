@@ -84,10 +84,20 @@ constructor(private menuService: MenuService,
   private router: Router) { }
   UserObj: any = {};
   PlanObj: any={};
+  RoleObj:any={};
+  isSuperAdmin=false;
+  isOtherUser=true;
+  isPlanImg=true;
   ngOnInit(): void {
     this.getPlans();
     this.PlanObj = JSON.parse(sessionStorage.getItem('planObj'));
     this.UserObj = JSON.parse(sessionStorage.getItem('userObj'));
+    this.RoleObj = JSON.parse(sessionStorage.getItem('roleObj'));
+    if(this.RoleObj[0].name == 'SuperAdmin'){
+      this.isSuperAdmin=true;
+      this.isOtherUser=false;
+    }
+    
     this.fetchFile(this.UserObj.id);
     this.fetchNotificationByUserFk(this.UserObj.id)
    
@@ -199,8 +209,10 @@ constructor(private menuService: MenuService,
         .subscribe(
           data => {
             this.planList = data;
+            if(this.RoleObj[0].name == 'SuperAdmin'){
+              this.isPlanImg=false;
+            }
             this.plan.planImg=this.PlanObj[0].planImg;
-           
           },
           error => {
             console.log(error);
