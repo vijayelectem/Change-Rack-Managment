@@ -1,0 +1,65 @@
+
+ <div class="row">
+  <div class="page-title">
+    <h4 class="ml-3">Rack Listing</h4>
+  </div>
+  <div class="input-group col">
+    <input type="search" class="form-control rounded ml-5 mb-2" style="max-width: max-content;" [(ngModel)]="search" placeholder="Search" aria-label="Search"
+      aria-describedby="search-addon" />
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker" class="btn btn-sm mt-2 ml-3"  [(ngModel)]="datePicker" placeholder="Choose a date" style="margin-left: 100px;">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <button type="button" class="btn btn-sm ml-4" (click)="fetchRack()">Search</button>&nbsp;
+  </div>
+    <div class="col" *ngIf="isRackCreated"> 
+      <button class="btn btn-sm btn-primary mt-2 pull-right" style="background-color: #2185d0;" routerLink="/createRack">
+        Add Rack
+      </button>
+    </div>
+</div>
+  <br>
+  <div class="mat-app-background basic-container">
+    <mat-table #table [dataSource]="dataSource" class="mat-elevation-z8">
+  
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef class="text-bold" style="font-size: 14px;color: #778D9B;"> RackName </mat-header-cell>
+        <mat-cell *matCellDef="let element" style="color:#778D9B"> {{element.name}} </mat-cell>
+      </ng-container>
+      
+
+      <ng-container matColumnDef="no_of_rows">
+        <mat-header-cell *matHeaderCellDef class="text-bold" style="font-size: 14px;color: #778D9B;"> No Of Rows </mat-header-cell>
+        <mat-cell *matCellDef="let element" style="color: #778D9B"> {{element.no_of_rows}} </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="no_of_columns">
+        <mat-header-cell *matHeaderCellDef class="text-bold" style="font-size: 14px;color: #778D9B;"> No Of Columns </mat-header-cell>
+        <mat-cell *matCellDef="let element" style="color:#778D9B"> {{element.no_of_columns}} </mat-cell>
+      </ng-container>
+
+
+      <ng-container matColumnDef="createdon">
+        <mat-header-cell *matHeaderCellDef class="text-bold" style="font-size: 14px;color: #778D9B;"> CreatedAt </mat-header-cell>
+        <mat-cell *matCellDef="let element" style="color: #778D9B"> {{element.createdon | date: 'dd/MM/yyyy'}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions" class="text-bold" style="margin-right: 10px;">
+        <mat-header-cell  *matHeaderCellDef class="text-bold"  style="font-size: 14px; margin-right: 10px;">  Actions </mat-header-cell>
+        <mat-cell *matCellDef="let element" >
+          <a class="bi-pencil-fill mr-2" data-toggle="tooltip" data-placement="bottom" title="Edit Rack" routerLink="/editRack/{{ element.id }}"></a>
+          <a class="bi-trash-fill context-menu mr-2" data-toggle="tooltip" data-placement="bottom" title="Delete Rack" (click)="deleteRack(element.id)" style="color: #990000;"></a>
+          <a class="bi-eye-fill text-success context-menu mr-2" data-toggle="tooltip" data-placement="bottom" title="Select Rack"  (click)="fetchTrayView(element.id,element.name)">
+          </a>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </div>
+
+  <mat-paginator #paginator
+  [pageSize]="5">
+</mat-paginator>

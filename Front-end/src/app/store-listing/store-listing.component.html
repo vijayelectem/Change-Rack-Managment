@@ -1,0 +1,48 @@
+<div class="page-title ml-2">
+    <h4>Store Listing</h4>
+</div>
+<div class="list row">
+    <div style="float:right">
+        <button class="btn btn-sm btn-primary mt-2 " style="background-color: #2185d0;
+                border-color: #2185d0;" routerLink="/add-store/">
+            Add Store
+        </button>
+    </div>
+</div>
+
+<div class="mat-app-background basic-container">
+    <mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 ml-2">
+
+        <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="storeName">
+            <mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" *matHeaderCellDef class="text-bold"
+                style="font-size: 14px;color: #778D9B;"> StoreName </mat-header-cell>
+            <mat-cell *matCellDef="let element" style="color:#778D9B"> {{element.storeName}} </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="location">
+            <mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" *matHeaderCellDef class="text-bold"
+                style="font-size: 14px;color: #778D9B;"> Location </mat-header-cell>
+            <mat-cell *matCellDef="let element" style="color:#778D9B"> {{element.location}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef class="text-bold" style="font-size: 14px;color: #778D9B;"> Actions
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element" >
+                <a class="bi-pencil-fill" routerLink="/edit-store/{{ element.storeId }}" ></a>
+                <a class="bi-trash-fill mr-2" (click)="deleteStore(element.storeId)" style="margin-left: 10px;  color:#990000">
+                </a>
+              </mat-cell>
+
+        </ng-container>
+
+    </mat-table>
+</div>

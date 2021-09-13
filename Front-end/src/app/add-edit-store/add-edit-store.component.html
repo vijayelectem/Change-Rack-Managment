@@ -1,0 +1,62 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card border-0">
+                    <div class="card-block">
+                        <div class="mrg-top-40">
+                            <div class="row">
+                                <div class="col-md-8 ml-auto mr-auto">
+                                    <form name="storeForm" [formGroup]="storeForm" (ngSubmit)="saveStore()">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="title">StoreName</label>
+                                                    <input type="text" class="form-control" id="storeName"
+                                                        formControlName="storeName"
+                                                        [ngClass]="{ 'is-invalid': submitted && f.storeName.errors }"
+                                                        name="storeName" [(ngModel)]="storeObj.storeName" />
+                                                    <div *ngIf="submitted && f.storeName.errors"
+                                                        class="invalid-feedback">
+                                                        <div *ngIf="f.storeName.errors.required">StoreName is required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="location">Select Location:</label>
+                                                    <select formControlName="location" class="form-control" [(ngModel)]="storeObj.location" (change)="changeLocation($event)">
+                                                        <option disabled>Choose Location</option>
+                                                        <option *ngFor="let location of locationList" value="{{location.city}}" >{{location.city}}</option>
+                                                    </select>
+                                                    <div *ngIf="f.location.touched && f.location.invalid" class="text-danger">
+                                                        <div *ngIf="f.location.errors.required">Select Any Location</div>
+                                                      </div>
+                                                  </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-6 col-xs-6">
+                                                <div class="text-right mrg-top-5">
+
+                                                    <div class="form-group">
+                                                        <button class="btn btn-primary">Create Store</button>
+                                                        <a routerLink="/stores" class="btn btn-link">Cancel</a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

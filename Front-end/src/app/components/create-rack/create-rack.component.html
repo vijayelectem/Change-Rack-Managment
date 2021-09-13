@@ -1,0 +1,71 @@
+<div class="card border-0">
+  <div class="card-body">
+      <form name="myForm" [formGroup]="rackForm" (ngSubmit)="saveRack()">
+        <div class="row">
+          <div class="col">
+            <div class="form-group col-md-8">
+              <label for="name">RackName</label>
+              <input type="text" class="form-control" id="name" formControlName="name"  [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+                name="name"/>
+                <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                  <div *ngIf="f.name.errors.required">RackName is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col mr-5">
+            <div class="form-group col-md-8">
+              <label for="description">Number Of Rows</label>
+              <input type="number" class="form-control" id="no_of_rows" formControlName="no_of_rows"  
+              [ngClass]="{ 'is-invalid': submitted && f.no_of_rows.errors }" name="no_of_rows"/>
+              <div *ngIf="submitted && f.no_of_rows.errors" class="invalid-feedback">
+                  <div *ngIf="f.no_of_rows.errors.required">Number Of Rows is required</div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col">
+            <div class="form-group col-md-8">
+              <label for="no_of_columns">Number Of Columns</label>
+              <input type="number" class="form-control" id="no_of_columns" formControlName="no_of_columns"  
+              [ngClass]="{ 'is-invalid': submitted && f.no_of_columns.errors }" name="no_of_columns"/>
+              <div *ngIf="submitted && f.no_of_columns.errors" class="invalid-feedback">
+                  <div *ngIf="f.no_of_columns.errors.required">Number Of Columns is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col mr-5">
+            <div class="form-group col-md-8">
+              <label for="createdon">Date</label>
+              <input type="date" class="form-control" id="createdon" formControlName="createdon"  
+              [ngClass]="{ 'is-invalid': submitted && f.createdon.errors }" name="createdon"/>
+              <div *ngIf="submitted && f.createdon.errors" class="invalid-feedback">
+                  <div *ngIf="f.createdon.errors.required">Date is required</div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="isStorePresent" class="row">
+            <div class="col">
+              <div class="form-group w-25">
+                <label for="storeFk">Select Stores:</label>
+                <select formControlName="storeFk" class="form-control" (change)="changeStore($event)">
+                  <option disabled>Choose Store</option>
+                  <option *ngFor="let store of storeList" [ngValue]="store.storeId" >{{store.storeName}}</option>
+                </select>
+                <div *ngIf="f.storeFk.touched && f.storeFk.invalid" class="text-danger">
+                  <div *ngIf="f.storeFk.errors.required">Store is required.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+  
+          <div class="form-group">
+            <button  class="btn btn-sm btn-primary mt-3 pull-right">Save Rack</button>
+            <a routerLink="/racks" class="btn btn-link mt-3 pull-right">Cancel</a>
+        </div>
+      </form>
+    </div>
+    </div>

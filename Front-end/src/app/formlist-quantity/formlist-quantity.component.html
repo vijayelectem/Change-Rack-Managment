@@ -1,0 +1,33 @@
+<button *ngIf="quantity != null" class="btn btn-sm btn-primary-product float-right" data-toggle="tooltip" data-placement="bottom" title="Select Existing Products" (click)="fetchAllProducts()">Select Existing Product</button>
+
+
+<mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 mt-5" style="width: 1000px;">
+  <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
+      <mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" *matHeaderCellDef>{{ column }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <div *ngIf="column !='quantity'" [innerHTML]="element[column]">
+        </div>
+        &nbsp;
+        
+        <div *ngIf="column =='quantity' && quantity != null" >
+          <input type="number" id="updateQuantity"  [value]="element[column]" class="form-control" (keyup)="onKeyUp($event)"/>
+        </div>
+        <div *ngIf="column =='quantity' && quantity==null" >
+          <input type="number" id="quantity"  class="form-control" (keyup)="onKeyUp($event)"/>
+        </div>
+        <div *ngIf="column =='actions' && isQuantity">
+          <a class="btn btn-primary btn-sm active" data-toggle="tooltip" data-placement="bottom" title="Add Items To Tray"
+            (click)="addItemsToTray(element.id)">AddItemsToTray</a>
+        </div>
+      </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"> </mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+
+<mat-paginator #paginator
+                 [pageSize]="5">
+  </mat-paginator>
+
+
