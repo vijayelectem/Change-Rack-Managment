@@ -5,9 +5,10 @@ const app = express()
 app.use(bodyParser.json())
 
 exports.createIndex = (req, res) => {
-
-  var filteredObjects = filterAttributesBasedOnIsearchable(req.body.attributes);
-    var myBody = '{"content":' + JSON.stringify(filteredObjects)+ '}';
+  
+  var formAttributesFiltered = filterAttributesBasedOnIsearchable(req.body.attributes);
+  
+    var myBody = '{"content":' + JSON.stringify(formAttributesFiltered)+ '}';
     var index = req.body.name;
     var type=req.body.name;
     var routing = req.body.username;
@@ -24,7 +25,12 @@ exports.createIndex = (req, res) => {
   };
 
   function filterAttributesBasedOnIsearchable(formAttributes) {
+    var resultantAttributes=[{}];
     let filteredObjects = formAttributes.filter(attributes =>attributes.isSearchable == 'true');
-    return filteredObjects;
+   for (let i = 0; i < filteredObjects.length; i++) {
+   resultantAttributes[i]=filteredObjects[i].label+":"+filteredObjects[i].value;
+   }
+   return resultantAttributes;
   }
+ 
   
