@@ -324,7 +324,7 @@ exports.updateTray = (req, res) => {
 
     sequelize.query(query, { type: sequelize.QueryTypes.FULLJOIN})
     .then(data => {
-      console.log(data[0]);
+
       res.send(data[0]);
     }).catch(err => { 
         res.status(500).send({
@@ -350,16 +350,18 @@ exports.updateTray = (req, res) => {
 
 exports.saveTrayLayout = (req, res) => {
   const trayList = req.body;
-  for (let i = 0; i < trayList.length; i++) {
-    let query = `UPDATE trays SET h = '${trayList[i].h}',w = '${trayList[i].w}' WHERE id = ${trayList[i].id}`;
-    sequelize.query(query).then(trayList => {
-      if (trayList[i] == i) {
+  const id=req.params.trayId;
+  const filteredTrays = trayList.filter(trays => trays.id == id);
+
+    let query = `UPDATE trays SET h = '${filteredTrays[0].h}',w = '${filteredTrays[0].w}' WHERE id = ${id}`;
+    sequelize.query(query).then(num => {
+      if (num == 1) {
         res.send({
           message: "TrayLayout was updated successfully."
         });
       } else {
         res.send({
-          message: `Cannot update TrayLayout with id=${trayList[i].id}`
+          message: `Cannot update TrayLayout with id=${id}`
         });
       }
     })
@@ -368,7 +370,20 @@ exports.saveTrayLayout = (req, res) => {
           message: "Error updating TrayLayout"
         });
       });
-  }
 
 };
+
+exports.fetchTrays = (req, res) => {
+  const searchString= req.query.searchString;
+  let query = `SELECT * FROM "trayItems" WHERE  quantity IS NOT NULL`;
+  sequelize.query(query, { type: sequelize.QueryTypes.SELECT})
+  .then(data => {
+    res.send(data);
+  }).catch(err => {
+      res.status(500).send({
+        message: "Error retrieving tray with=" + searchString
+      });
+    });
+};
+
 

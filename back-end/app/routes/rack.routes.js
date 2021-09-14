@@ -26,13 +26,15 @@ module.exports = app => {
     // Create a new Tray
     router.post("/tray", racks.trayCreate);
 
+    router.get("/",racks.fetchTrays);
+
     // Retrieve a single Tray with id
     router.get("/tray/:id", racks.fetchTrayById);
 
     // Update a Tray with id
     router.put("/tray/:id", racks.updateTray);
 
-    router.post("/tray/props/", racks.saveTrayLayout);
+    router.put("/tray/props/:trayId", racks.saveTrayLayout);
 
     // Delete a Tray with id
     router.delete("/tray/:id", racks.deleteTray);
