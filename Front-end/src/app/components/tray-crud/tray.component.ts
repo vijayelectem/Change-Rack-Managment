@@ -14,6 +14,7 @@ import { RackService } from '../../services/rack.service';
 import { AlertService } from '../_alert/alert.service';
 import { UploadFilesService } from 'src/app/services/upload-files.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { MatTableDataSource } from '@angular/material/table';
 
 
 
@@ -24,7 +25,9 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 })
 export class TrayComponent implements OnInit, OnDestroy {
 
-    trayObject:any;
+   trayObject:any;
+   displayedColumns: string[] = ['name', 'storeName'];
+   dataSource = new MatTableDataSource<any>();
     UserObj: any = {};
     image:any;
     trayId:any;
@@ -89,6 +92,8 @@ export class TrayComponent implements OnInit, OnDestroy {
     fileId=undefined;
     rackId:any;
     rackName:any;
+    search:string='';
+    isQuantity=false;
 
 
     currentlyTraySearchable = false;
@@ -102,15 +107,11 @@ export class TrayComponent implements OnInit, OnDestroy {
 
     openFileUpload: false;
 
-    private updateSubscription: Subscription;
-
     ngOnInit() {
         this.rackId=this.route.snapshot.params.id;
-        this.updateSubscription = interval(0).subscribe(
-            (val) => {  this.getTrayProp(this.route.snapshot.params.id);
-                this.getTrayDataById(this.route.snapshot.params.id);
-          }
-      );
+        this.getTrayProp(this.route.snapshot.params.id);
+        this.getTrayDataById(this.route.snapshot.params.id);
+          
         this.UserObj = JSON.parse(sessionStorage.getItem('userObj'));
         this.file.user_fk = this.UserObj.clientFk; 
         this.rackName=this.route.snapshot.params.name;
@@ -317,8 +318,18 @@ export class TrayComponent implements OnInit, OnDestroy {
         this.currentlyTraySearchable = this.currentlyBeingEditedTray.searchable;
     }
 
+    searchTray(){
+        //console.log(this.search);
+        this.rackService.fetchTrays(this.route.snapshot.params.name,this.search)
+        .subscribe((data: any)=>{
+            this.dataSource.data = data;
+            if(this.dataSource.data.length>0){
+                this.isQuantity=true;
+            }
+        })
+    }
+
     saveTray() {
-        // console.log(this.form);
          this.currentlyBeingEditedTray.name = this.form.controls.trayname.value;
         console.log(this.currentlyBeingEditedTray);
         if(this.currentlyBeingEditedTray.img==undefined){

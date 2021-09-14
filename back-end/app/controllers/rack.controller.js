@@ -375,10 +375,16 @@ exports.saveTrayLayout = (req, res) => {
 
 exports.fetchTrays = (req, res) => {
   const searchString= req.query.searchString;
-  let query = `SELECT * FROM "trayItems" WHERE  quantity IS NOT NULL`;
-  sequelize.query(query, { type: sequelize.QueryTypes.SELECT})
+  const name=req.params.name;
+  let query = `select DISTINCT r.name,s."storeName" from "trayItems" ti INNER JOIN trays t 
+  on t.id=ti."trayId" INNER JOIN racks r
+  on r.id=t.rack_fk INNER JOIN stores s
+  on s."storeId"=r."storeFk" INNER JOIN users u
+  on u."storeFk"=s."storeId"
+  where r.name='${name}'`;
+  sequelize.query(query, { type: sequelize.QueryTypes.INNERJOIN})
   .then(data => {
-    res.send(data);
+    res.send(data[0]);
   }).catch(err => {
       res.status(500).send({
         message: "Error retrieving tray with=" + searchString
