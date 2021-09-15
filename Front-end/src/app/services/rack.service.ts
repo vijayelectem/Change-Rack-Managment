@@ -84,4 +84,8 @@ export class RackService {
     return this.http.get(`${baseUrl}/api/trayItem/fetchTrayTemplateAndFormById/${trayId}/${tempId}/${formId}`);
   }
 
+  fetchTrays(name:any,search:any){
+    return this.http.get(`${baseUrl}/api/rack/tray/items/${name}?searchString=${search}`);
+  }
+
 }
