@@ -51,6 +51,10 @@ User.associate = (models) => {
   User.belongsTo(models.Store, { foreignKey: 'storeFk', as: 'user' })
 };
 
+User.associate = function (models) {
+  User.hasMany(models.userPreference, { as: 'userPreference' })
+};
+
 User.associate = (models) => {
   User.belongsTo(models.Role, {
     foreignKey: 'roleId',

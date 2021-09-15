@@ -18,6 +18,7 @@ module.exports = (sequelize, Sequelize) => {
 			  key: 'id'
 			}
 		  },
+		  
 	});
 
 	Item.associate = function (models) {
@@ -29,6 +30,9 @@ module.exports = (sequelize, Sequelize) => {
 		Item.belongsTo(models.Client, { foreignKey: 'clientFk', as: 'client' })
 	};
 
+	Item.associate = function (models) {
+		Item.hasMany(models.userPreference, { as: 'userPreference' })
+	};
 
 	return Item;
 };
