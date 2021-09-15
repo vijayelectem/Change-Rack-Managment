@@ -19,6 +19,7 @@ db.notifications = require("../models/notification.model.js")(sequelize, Sequeli
 //db.itemtemplates = require("./itemTemplate.model.js")(sequelize, Sequelize);
 db.templates = require("./item.model.js")(sequelize, Sequelize);
 db.itemtemplatepropertys = require("./itemTemplateProperty.js")(sequelize, Sequelize);
+db.userPreference = require("../models/userPreference.model.js")(sequelize, Sequelize);
 db.products = require("./itemForm.model.js")(sequelize, Sequelize);
 db.clients = require("./client.model.js")(sequelize, Sequelize);
 db.plans = require("./plan.model.js")(sequelize, Sequelize);
