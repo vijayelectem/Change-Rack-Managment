@@ -26,3 +26,17 @@ exports.createUserPreference = (req, res) => {
         });
 };
 
+exports.fetchAllSelectedColumns = (req,res) => {
+    const templateId = req.params.templateId;
+    const userFk = req.params.userFk;
+   let query = `SELECT * FROM "userPreferences" where "templateId" = ${templateId} AND "userFk" = ${userFk}`;
+   sequelize.query(query, { type: sequelize.QueryTypes.SELECT})
+   .then(data => {
+     res.send(data);
+   }).catch(err => {
+       res.status(500).send({
+         message: "Error retrieving selected columns"+err
+       });
+     });
+ };
+
