@@ -4,6 +4,7 @@ import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Client } from '../client';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +26,7 @@ export class LoginComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private formBuilder: FormBuilder,
+    private appService: AppService
   ) {
     this.isLogin = true;
     this.isUserRegister = false;
@@ -54,11 +56,12 @@ export class LoginComponent implements OnInit {
     .subscribe(
       response => {
         if(response !== null){
-          this.getClientList(response.clientFk);
+          this.appService.setuserObject(response);
+          sessionStorage.setItem('userObj', JSON.stringify(response));
           console.log(response);
+          this.getClientList(response.clientFk);
           this.showSuccess=true;
           Client.clientFK = response.clientFk;
-          sessionStorage.setItem('userObj', JSON.stringify(response));
            this.retrieveRole(response.roleId);
         }
         else {

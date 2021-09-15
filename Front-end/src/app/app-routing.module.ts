@@ -25,8 +25,9 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
 import { ItemListingComponent } from './components/item-crud/item-listing.component';
 import { StoreListingComponent } from './store-listing/store-listing.component';
 import { AddEditStoreComponent } from './add-edit-store/add-edit-store.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 const routes: Routes = [
-  
+  { path: 'dashboard', component:DashboardComponent},
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'template', component: TemplateListComponent },

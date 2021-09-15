@@ -45,6 +45,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormListComponent } from './components/forms-list/forms-list.component';
 import { AddEditStoreComponent } from './add-edit-store/add-edit-store.component';
 import { StoreListingComponent } from './store-listing/store-listing.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 const appRoutes: Routes = [
   // { path: '', component: EditAppComponent },
 ];
@@ -73,6 +74,7 @@ const appRoutes: Routes = [
     ChangePasswordComponent,
     AddEditStoreComponent,
     StoreListingComponent,
+    DashboardComponent,
     
   ],
   imports: [

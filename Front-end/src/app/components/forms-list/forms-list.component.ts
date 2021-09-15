@@ -7,6 +7,10 @@ import swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
 import { MatPaginator } from '@angular/material/paginator';
 import { environment } from 'src/environments/environment';
+import { UserPreference } from 'src/app/user-preference';
+import { UserPreferenceService } from 'src/app/user-preference.service';
+import { ArrayDataSource } from '@angular/cdk/collections';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 const columnLength=environment.columnLength;
 interface CustomColumn {
   possition: number;
@@ -24,16 +28,28 @@ export class FormListComponent implements OnInit {
   currentTemplate?: Product;
   currentIndex = -1;
   name = '';
-  tempid = '';
+  tempid = 0;
   clientFk = '';
   UserObj: any = {};
   templateName: any;
+
+  userPreference: UserPreference = {
+    id:0,
+    userFk:0,
+    templateId:0,
+    selectedColumn:''
+  };
+
+  userSelectedColumns: string[];
+
   showHideColumn=false;
 
   displayedColumns: string[] = [];
+  selectedColumn=this.displayedColumns.toString();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   constructor(private formService: FormService,
+    private userPreferenceService: UserPreferenceService,
     private route: ActivatedRoute,
     private router: Router, private http: HttpClient) {
       route.params.subscribe(val => {
@@ -56,6 +72,7 @@ export class FormListComponent implements OnInit {
     this.retrieveForms();
     this.UserObj = JSON.parse(sessionStorage.getItem('userObj'));
     this.clientFk = this.UserObj.clientFk;
+    //this.retrieveSelectedColumns(this.tempid,this.UserObj.id);
   }
 
   retrieveForms(): void {    
@@ -63,6 +80,7 @@ export class FormListComponent implements OnInit {
       .subscribe(
         data => {
           this.extractData(data)
+          this.retrieveSelectedColumns(this.tempid,this.UserObj.id);
         });
   }
 
@@ -181,7 +199,7 @@ export class FormListComponent implements OnInit {
       }
         else
         this.columnShowHideList.push(
-          { possition: index, name: element, isActive: true }
+          { possition: index, name: element, isActive: false }
         );
         
     }); 
@@ -201,11 +219,77 @@ export class FormListComponent implements OnInit {
     }
   }
 
+  toggleColumns(column) {
+    if (column.isActive) {
+      if (column.possition > this.displayedColumns.length - 1) {
+        this.displayedColumns.push(column.name);
+      } else {
+        this.displayedColumns.splice(column.possition, 0, column.name);
+      }
+    } else {
+      let i = this.displayedColumns.indexOf(column.name);
+      let opr = i > -1 ? this.displayedColumns.splice(i, 1) : undefined;
+    }
+  }
+
+
+
+  saveUserSelected(): void {
+    this.userPreference.selectedColumn=this.displayedColumns.toString(),
+    this.userPreference.templateId=this.tempid,
+    this.userPreference.userFk=this.UserObj.id
+    if(this.userPreference.id) {
+      this.updateSelectedColumns(this.userPreference.id);
+    } else {
+       this.userPreferenceService.createUserPreference(this.userPreference)
+      .subscribe(
+        response => {
+          console.log(response);
+        },
+        error => {
+          console.log(error);
+        });
+    }
+   
+  }
+
+  retrieveSelectedColumns(tempid,userFk): void {
+    this.userPreferenceService.getAllSelectedColumns(this.tempid, userFk)
+      .subscribe(
+        data => {
+          if(data.length > 0) {
+            this.userPreference = data[0];
+          this.userSelectedColumns=data[0].selectedColumns.split(",");
+            this.displayedColumns=this.userSelectedColumns;
+
+              
+    this.displayedColumns.forEach((element, index) => {
+      let coulumns =  { possition: 3, name: element, isActive: true }
+        this.toggleColumn(coulumns); 
+        }); 
+          }
+        });
+  }
+
+
+
   private getData(): any {
     this.http.get('/assets/testdata/itemlisting.json')
     .subscribe((data: any) => {
       this.extractData(data)      
     });
+  }
+
+
+  updateSelectedColumns(id:number) {   
+    this.userPreferenceService.updateSelectedColumns(id,this.userPreference)
+      .subscribe(data => {
+        console.log(data);
+        this.userPreference = data;
+          //this.router.navigate(['/racks']);
+      },  error => {
+        console.log(error);
+      });
   }
 
 }
