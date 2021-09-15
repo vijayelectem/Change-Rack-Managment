@@ -106,6 +106,12 @@ function initial() {
   });
 
   Menu.create({
+    label: "DashBoard",
+    action: '/dashboard',
+    roleId: 2
+  });
+
+  Menu.create({
     label: "Home",
     action: '/template',
     roleId: 2
