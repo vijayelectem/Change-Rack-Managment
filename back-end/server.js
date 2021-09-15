@@ -53,6 +53,7 @@ require('./app/routes/profile.routes')(app);
 require('./app/routes/file.routes')(app);
 require('./app/routes/notification.routes')(app);
 require('./app/routes/elasticsearch.routes')(app);
+require('./app/routes/userPreference.routes')(app);
 initRoutes(app);
 
 // set port, listen for requests
