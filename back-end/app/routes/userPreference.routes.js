@@ -5,8 +5,9 @@ module.exports = app => {
 
     router.post("/createUserPreference", userPreference.createUserPreference);
 
-    router.post("/fetchAllSelectedColumns/:templateId/:userFk", userPreference.fetchAllSelectedColumns);
-    fetchAllSelectedColumns
+    router.get("/fetchAllSelectedColumns/:templateId/:userFk", userPreference.fetchAllSelectedColumns);
+    
+    router.put("/:id", userPreference.updateSelectedColumns);
 
     app.use('/api/userPreference', router);
 };

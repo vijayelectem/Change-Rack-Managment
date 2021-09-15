@@ -26,6 +26,27 @@ exports.createUserPreference = (req, res) => {
         });
 };
 
+exports.updateSelectedColumns = (req, res) => {
+    const id = req.params.id;
+  let query = `UPDATE "userPreferences" SET "selectedColumns" = '${req.body.selectedColumns}' WHERE id = ${id} And "templateId" = ${req.body.templateId}`;
+  sequelize.query(query).then(num => {
+      if (num == 1) {
+        res.send({
+          message: "trayItems was updated successfully."
+        });
+      } else {
+        res.send({
+          message: `Cannot update trayItems with id=${id}.`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error updating Form with id=" + id
+      });
+    });
+  };
+
 exports.fetchAllSelectedColumns = (req,res) => {
     const templateId = req.params.templateId;
     const userFk = req.params.userFk;
