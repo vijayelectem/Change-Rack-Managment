@@ -1,3 +1,9 @@
+const db = require("../models");
+const UserStore = db.userStore;
+const Op = db.Sequelize.Op;
+const Sequelize = require("sequelize");
+const sequelize = require("../config/seq.config.js");
+db.Sequelize = Sequelize;
 
 exports.addStaffToStore = (req, res) => {
 
@@ -36,3 +42,30 @@ exports.fetchStoreByStaffId = (req, res) => {
         });
       });
   };
+
+  exports.deleteStoreByStaffId = (req, res) => {
+    const userFk = req.params.userFk;
+  
+    UserStore.destroy({
+      where: { userFk: userFk }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Store was deleted successfully!"
+          });
+        } else {
+          res.send({
+            message: `Cannot delete Store with id=${userFk}. Maybe Store was not found!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete Store with id=" + userFk
+        });
+      });
+  };
+
+
+
