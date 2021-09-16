@@ -15,37 +15,37 @@ import { Store } from '../models/store.model';
 export class AddStaffComponent implements OnInit {
 
   dropdownList = [];
-  selected:any = [];
+  selected: any = [];
   dropdownSettings = {};
-  
+
   staff: Staff = {
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
   };
-  storeList:any;
+  storeList: any;
   UserObj: any = {};
-  PlanObj: any={};
+  PlanObj: any = {};
   staffRoleID: '';
   clientName: '';
-  isStorePresent=true;
-  storeName:any;
-  staffObj = { username: '', email: '', password:'' , confirmPassword : ''};
-  store: Store={
-    storeId:0,
-    storeName:'',
-    location:'',
+  isStorePresent = true;
+  storeName: any;
+  staffObj = { username: '', email: '', password: '', confirmPassword: '', stores: [] };
+  store: Store = {
+    storeId: 0,
+    storeName: '',
+    location: '',
   };
   noOfUsers: '';
   isExist = false;
-  constructor(  private router: Router,
+  constructor(private router: Router,
     private userService: UserService,
     private storeService: StoreService,
-    private formBuilder: FormBuilder,private route: ActivatedRoute) { }
-    loading = false;
-    submitted = false;
-    staffForm: FormGroup;
+    private formBuilder: FormBuilder, private route: ActivatedRoute) { }
+  loading = false;
+  submitted = false;
+  staffForm: FormGroup;
   ngOnInit(): void {
 
     this.dropdownSettings = {
@@ -55,87 +55,83 @@ export class AddStaffComponent implements OnInit {
       selectAllText: 'Select All',
       unSelectAllText: 'Unselect All',
       itemsShowLimit: 3
-   }
+    }
 
     this.PlanObj = JSON.parse(sessionStorage.getItem('planObj'));
     this.UserObj = JSON.parse(sessionStorage.getItem('userObj'));
     this.getStaffRole();
     this.getClientName(this.UserObj.clientFk);
     this.staffForm = this.formBuilder.group({
-      username : ['', Validators.required],
+      username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
       clientFk: this.UserObj.clientFk,
       status: 'ACTIVE',
       roleId: this.staffRoleID,
-      storeFk:null,
+      storeFk: null,
       stores: {},
-  });
-  if(this.PlanObj[0].name == 'Personal'){
-    this.isStorePresent = false;
-    this.staffForm.value.storeFk = null;
-    
-  }
-  this.getStaffData(this.route.snapshot.params.id);
-  this.getStores(this.UserObj.clientFk);
-  
- 
+    });
+    if (this.PlanObj[0].name == 'Personal') {
+      this.isStorePresent = false;
+      this.staffForm.value.storeFk = null;
+
+    }
+    this.getStaffData(this.route.snapshot.params.id);
+    this.getStores(this.UserObj.clientFk);
+
+
   }
 
-  getStores(client_fk): void{
+  getStores(client_fk): void {
     this.storeService.fetchAllStoresByClientFK(client_fk)
-    .subscribe((data: any) => {
-      if(this.staffForm.value.username){
-          this.storeList=this.selected;
-      }else{
-        this.storeList= data;
-      }
-     
-    },
-      error => {
-        console.log(error);
-      });
+      .subscribe((data: any) => {
+        this.storeList = data;
+
+      },
+        error => {
+          console.log(error);
+        });
   }
 
- get f() { return this.staffForm.controls; }
+  get f() { return this.staffForm.controls; }
 
   saveClientStaff(): void {
     this.submitted = true;
     if (this.staffForm.invalid) {
       return;
     }
-     
-    if(this.staff.password == this.staff.confirmPassword){
-    if(this.route.snapshot.params.id) {
-      return this.updateClientStaff();
-    }
-    this.staffForm.value.roleId = this.staffRoleID;
-    this.staffForm.value.username =  this.clientName + '.' + this.staffForm.value.username;
-    this.staffForm.value.stores = this.selected;
-    this.userService.backendValidation(this.staffForm.value.username,this.staffForm.value.email)
-    .subscribe(
-      response => {
-        if(response.length>0){
-          this.isExist = true;
-        }
-      else
-    this.userService.saveClientStaff( this.clientName,this.staffForm.value)
-      .subscribe(
-        response => {
-          console.log(response);
-          this.submitted = true;
-          this.getSelectedValue();
-          this.router.navigate(['/staff']);
+
+    if (this.staff.password == this.staff.confirmPassword) {
+      if (this.route.snapshot.params.id) {
+        return this.updateClientStaff();
+      }
+      this.staffForm.value.roleId = this.staffRoleID;
+      this.staffForm.value.username = this.clientName + '.' + this.staffForm.value.username;
+      this.staffForm.value.stores = this.selected;
+      this.userService.backendValidation(this.staffForm.value.username, this.staffForm.value.email)
+        .subscribe(
+          response => {
+            if (response.length > 0) {
+              this.isExist = true;
+            }
+            else
+              this.userService.saveClientStaff(this.clientName, this.staffForm.value)
+                .subscribe(
+                  response => {
+                    console.log(response);
+                    this.submitted = true;
+                    this.getSelectedValue();
+                    this.router.navigate(['/staff']);
+                  },
+                  error => {
+                    console.log(error);
+                  });
           },
-        error => {
-          console.log(error);
-        });
-      },
-      error => {
-        console.log(error);
-    });
-  }
+          error => {
+            console.log(error);
+          });
+    }
   }
 
   updateClientStaff(): void {
@@ -144,13 +140,14 @@ export class AddStaffComponent implements OnInit {
       return;
     }
     this.staffForm.value.roleId = this.staffRoleID;
-    this.userService.updateClientStaff(this.route.snapshot.params.id,this.staffForm.value)
+    this.userService.updateClientStaff(this.route.snapshot.params.id, this.staffForm.value)
       .subscribe(
         response => {
+
           console.log(response);
           this.submitted = true;
           this.router.navigate(['/staff']);
-          },
+        },
         error => {
           console.log(error);
         });
@@ -158,58 +155,54 @@ export class AddStaffComponent implements OnInit {
 
   getStaffRole(): void {
     this.userService.getStaffRole()
-        .subscribe(
-            data => {
-                this.staffRoleID = data[0].id;
-            },
-            error => {
-                console.log(error);
-  });
-}
+      .subscribe(
+        data => {
+          this.staffRoleID = data[0].id;
+        },
+        error => {
+          console.log(error);
+        });
+  }
 
-    getClientName(id:any): void {
-      this.userService.getClientName(id)
-          .subscribe(
-              data => {
-                  this.clientName = data[0].name;
-              },
-              error => {
-                  console.log(error);
-    });
-    }
-  
-    getStaffData(id: string): void {
-        this.userService.get(id)
-            .subscribe(
-              data => {
-                console.log(data);
-                this.staffObj = data;
-                this.staffObj.confirmPassword = data.password;
-                this.storeService.getStoreById(data.storeFk)
-                .subscribe(
-                  response=>{
-                    this.store=response;
-                  }
-                )
-            },
-                error => {
-                    console.log(error);
-      });
-    }  
+  getClientName(id: any): void {
+    this.userService.getClientName(id)
+      .subscribe(
+        data => {
+          this.clientName = data[0].name;
+        },
+        error => {
+          console.log(error);
+        });
+  }
 
-    changeFn(item: any) {
-      this.selected.push(item);
-    }
+  getStaffData(id: string): void {
+    this.userService.get(id)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.staffObj = data;
+          this.staffObj.confirmPassword = data.staff.password;
+          this.staffObj.email = data.staff.email;
+          this.selected = data.staff.stores;
+        },
+        error => {
+          console.log(error);
+        });
+  }
 
-    onItemSelect(item: any) {
-      this.selected.push(item);
-    }
+  changeFn(item: any) {
+    this.selected.push(item);
+  }
 
-    onSelectAll(items: any) {
-      this.selected.push(items);
-    }
+  onItemSelect(item: any) {
+    this.selected.push(item);
+  }
 
-    getSelectedValue(){
-      console.log(this.selected);
-    }
+  onSelectAll(items: any) {
+    this.selected.push(items);
+  }
+
+  getSelectedValue() {
+    console.log(this.selected);
+  }
 }

@@ -40,6 +40,7 @@
     "ngx-color": "^7.0.0",
     "ngx-drag-drop": "^1.1.0",
     "ngx-number-spinner": "^2.2.1",
+    "ngx-treeview": "^10.0.2",
     "pdfmake": "^0.2.2",
     "rxjs": "~6.6.3",
     "sweetalert2": "^7.19.3",
