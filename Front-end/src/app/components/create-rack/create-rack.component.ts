@@ -23,7 +23,7 @@ export class CreateRackComponent implements OnInit {
     no_of_columns:0,
     client_fk:0,
     createdon:'',
-    stores:{}
+    storeFk:0
     
   };
   store: Store={
@@ -44,19 +44,9 @@ export class CreateRackComponent implements OnInit {
   rackForm: FormGroup;
   rackObj:any;
   createdon:any;
-  dropdownSettings = {};
   isStorePresent=true;
-  categories :any = [];
-  selected:any = [];
   ngOnInit() {
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: 'storeId',
-      textField: 'storeName',
-      selectAllText: 'Select All',
-      unSelectAllText: 'Unselect All',
-      itemsShowLimit: 3
-   }
+   
     this.PlanObj = JSON.parse(sessionStorage.getItem('planObj'));
     this.UserObj = JSON.parse(sessionStorage.getItem('userObj'));
      this.rack.client_fk = this.UserObj.clientFk;
@@ -77,20 +67,10 @@ export class CreateRackComponent implements OnInit {
   this.getStores(this.UserObj.clientFk);
   }
 
-  onItemSelect(item: any) {
-    this.selected.push(item);
-  }
-  onSelectAll(items: any) {
-    this.selected.push(items);
-  }
-  getSelectedValue(){
-    console.log(this.selected);
-  }
-
   getStores(client_fk): void{
     this.storeService.fetchAllStoresByClientFK(client_fk)
     .subscribe((data: any) => {
-     this.categories = data;
+     this.storeList = data;
     },
       error => {
         console.log(error);
@@ -99,13 +79,12 @@ export class CreateRackComponent implements OnInit {
 
   get f() { return this.rackForm.controls; }
 
-  saveRack(data:any): void {
-    data.stores = this.selected;
+  saveRack(): void {
     this.submitted = true;
     if (this.rackForm.invalid) {
       return;
     }
-    this.rackService.createRack(data)
+    this.rackService.createRack(this.rackForm.value)
       .subscribe(
         response => {
           console.log(response);

@@ -1,6 +1,6 @@
 <div class="card border-0">
   <div class="card-body">
-      <form name="myForm" [formGroup]="rackForm" (ngSubmit)="saveRack(rack)">
+    <form name="myForm" [formGroup]="rackForm" (ngSubmit)="saveRack()">
         <div class="row">
           <div class="col">
             <div class="form-group col-md-8">
@@ -45,21 +45,22 @@
               </div>
             </div>
           </div>
-
-          <div class="col mr-5">
-            <label for="Stores">Select Stores</label>
-            <ng-multiselect-dropdown
-              [settings]="dropdownSettings" style="width: 300px;"
-              [data]="categories"
-              [(ngModel)]="selected"
-              (onSelect)="onItemSelect($event)"
-              (onSelectAll)="onSelectAll($event)"
-             
-          >
-          </ng-multiselect-dropdown>
-          </div>
-
         </div>
+
+         <div *ngIf="isStorePresent" class="row">
+            <div class="col">
+              <div class="form-group w-25">
+                <label for="storeFk">Select Stores:</label>
+                <select formControlName="storeFk" class="form-control" (change)="changeStore($event)">
+                  <option disabled>Choose Store</option>
+                  <option *ngFor="let store of storeList" [ngValue]="store.storeId" >{{store.storeName}}</option>
+                </select>
+                <div *ngIf="f.storeFk.touched && f.storeFk.invalid" class="text-danger">
+                  <div *ngIf="f.storeFk.errors.required">Store is required.</div>
+                </div>
+              </div>
+            </div>
+         </div>
   
           <div class="form-group">
             <button  class="btn btn-sm btn-primary mt-3 pull-right">Save Rack</button>
