@@ -145,7 +145,7 @@ exports.saveClientStaff = (req, res) => {
       .then(data => {
         if(req.body.stores.length>0){
           req.body.stores.forEach(store => {
-          req.body.storeFk=store.id;
+          req.body.storeId=store.storeId;
           req.body.storeName=store.storeName;
           req.body.userFk=data.id;
           staffStoreController.addStaffToStore(req,res);
