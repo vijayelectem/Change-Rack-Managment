@@ -46,6 +46,7 @@ import { FormListComponent } from './components/forms-list/forms-list.component'
 import { AddEditStoreComponent } from './add-edit-store/add-edit-store.component';
 import { StoreListingComponent } from './store-listing/store-listing.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { TreeviewModule } from 'ngx-treeview';
 const appRoutes: Routes = [
   // { path: '', component: EditAppComponent },
 ];
@@ -99,7 +100,8 @@ const appRoutes: Routes = [
     MatSlideToggleModule,
     AlertModule,
     NgxNumberSpinnerModule,
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
+    TreeviewModule.forRoot()
   ],
     providers: [ DatePipe,
     {provide:HTTP_INTERCEPTORS,useClass:LoggingInterceptor,multi:true}],
