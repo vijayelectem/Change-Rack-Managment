@@ -253,8 +253,20 @@ exports.update = (req, res) => {
     where: { id: id }
   })
     .then(num => {
+      if (req.body.stores.length > 0) {
+        req.params.userFk = req.params.id;
+        staffStoreController.deleteStoreByStaffId(req, res);
+        req.body.stores.forEach(store => {
+          req.body.storeId=store.storeId;
+          req.body.storeName=store.storeName;
+          req.body.userFk=req.params.id;
+          staffStoreController.addStaffToStore(req,res);
+        });
+      }
+
       if (num == 1) {
         res.send({
+
           message: "User was updated successfully."
         });
       } else {
