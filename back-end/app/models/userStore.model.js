@@ -21,6 +21,10 @@ module.exports = (sequelize, Sequelize) => {
         onUpdate:'Cascade',
         onDelete:'Cascade',
       },
+      storeName:{
+        type:Sequelize.STRING
+      },
+      
     }, {});
   
     UserStore.associate = (models) => {

@@ -9,7 +9,8 @@ exports.addStaffToStore = (req, res) => {
 
     const userStore = {
       userFk:req.body.userFk,
-      storeFk:req.body.storeFk
+      storeFk:req.body.storeFk,
+      storeName:req.body.storeName
     };
 
     // Save Rack in the database
@@ -24,6 +25,23 @@ exports.addStaffToStore = (req, res) => {
             });
         });
 };
+
+exports.fetchStoreByStaffId = (req, res) => {
+    const userFk = req.params.userFk;
+    const staff = req.body.staff;
+    const staffToStore={staff:{store:{}}};
+    staffToStore.staff=staff.dataValues;
+    let query = `SELECT * FROM "userStores" where "userFk"=${userFk}`;
+    sequelize.query(query, { type: sequelize.QueryTypes.SELECT})
+    .then(data => {
+    staffToStore.staff.store=data;
+      res.send(staffToStore);
+    }).catch(err => {
+        res.status(500).send({
+          message: "Error retrieving locations"+err
+        });
+      });
+  };
 
 
 

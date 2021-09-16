@@ -145,7 +145,8 @@ exports.saveClientStaff = (req, res) => {
       .then(data => {
         if(req.body.stores.length>0){
           req.body.stores.forEach(store => {
-          req.body.storeFk=store.storeId;
+          req.body.storeFk=store.id;
+          req.body.storeName=store.storeName;
           req.body.userFk=data.id;
           staffStoreController.addStaffToStore(req,res);
           });
@@ -229,7 +230,9 @@ exports.findOne = (req, res) => {
   const id = req.params.id;
   User.findByPk(id)
     .then(data => {
-      res.send(data);
+      req.params.userFk = data.id;
+      req.body.staff = data;
+      staffStoreController.fetchStoreByStaffId(req,res);
     })
     .catch(err => {
       res.status(500).send({
@@ -237,6 +240,8 @@ exports.findOne = (req, res) => {
       });
     });
 };
+
+
 
 
 // Update a Staff by the id in the request
