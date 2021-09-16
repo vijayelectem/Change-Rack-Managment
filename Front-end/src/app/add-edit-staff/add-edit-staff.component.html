@@ -66,9 +66,11 @@
                       <div class="col">
                         <div class="form-group w-25">
                           <label for="storeFk">Select Stores:</label>
-                          <select formControlName="storeFk" class="form-control" [(ngModel)]="store.storeId"  (change)="changeStore($event)">
+                          <select formControlName="storeFk" class="form-control" [(ngModel)]="store.storeId"
+                            (change)="changeStore($event)">
                             <option disabled>Choose Store</option>
-                            <option *ngFor="let store of storeList" [ngValue]="store.storeId" >{{store.storeName}}</option>
+                            <option *ngFor="let store of storeList" [ngValue]="store.storeId">{{store.storeName}}
+                            </option>
                           </select>
                           <div *ngIf="f.storeFk.touched && f.storeFk.invalid" class="text-danger">
                             <div *ngIf="f.storeFk.errors.required">Store is required.</div>
@@ -76,7 +78,18 @@
                         </div>
                       </div>
                     </div>
-      
+                    
+                    <div>
+                      <label for="storeFk">Select Stores:</label>
+                    <ng-multiselect-dropdown [placeholder]="'Select'" 
+                                             [settings]="dropdownSettings"
+                                             [data]="storeList" 
+                                             [(ngModel)]="selected" 
+                                             (onSelect)="onItemSelect($event)"
+                                             (onSelectAll)="onSelectAll($event)">
+                    </ng-multiselect-dropdown>
+                  </div>
+
                     <div class="row">
                       <div class="col-md-6 col-xs-6">
                         <div class="checkbox">
