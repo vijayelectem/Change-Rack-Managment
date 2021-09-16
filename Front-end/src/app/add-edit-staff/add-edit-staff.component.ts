@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { UserService } from '../services/user.service';
 import { Staff } from '../models/staff.model';
 import swal from 'sweetalert2';
@@ -14,6 +14,10 @@ import { Store } from '../models/store.model';
 })
 export class AddStaffComponent implements OnInit {
 
+  dropdownList = [];
+  selected:any = [];
+  dropdownSettings = {};
+  
   staff: Staff = {
     username: '',
     email: '',
@@ -43,6 +47,16 @@ export class AddStaffComponent implements OnInit {
     submitted = false;
     staffForm: FormGroup;
   ngOnInit(): void {
+
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'storeId',
+      textField: 'storeName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'Unselect All',
+      itemsShowLimit: 3
+   }
+
     this.PlanObj = JSON.parse(sessionStorage.getItem('planObj'));
     this.UserObj = JSON.parse(sessionStorage.getItem('userObj'));
     this.getStaffRole();
@@ -56,19 +70,28 @@ export class AddStaffComponent implements OnInit {
       status: 'ACTIVE',
       roleId: this.staffRoleID,
       storeFk:null,
+      stores: {},
   });
   if(this.PlanObj[0].name == 'Personal'){
     this.isStorePresent = false;
     this.staffForm.value.storeFk = null;
+    
   }
   this.getStaffData(this.route.snapshot.params.id);
   this.getStores(this.UserObj.clientFk);
+  
+ 
   }
 
   getStores(client_fk): void{
     this.storeService.fetchAllStoresByClientFK(client_fk)
     .subscribe((data: any) => {
-     this.storeList= data;
+      if(this.staffForm.value.username){
+          this.storeList=this.selected;
+      }else{
+        this.storeList= data;
+      }
+     
     },
       error => {
         console.log(error);
@@ -89,6 +112,7 @@ export class AddStaffComponent implements OnInit {
     }
     this.staffForm.value.roleId = this.staffRoleID;
     this.staffForm.value.username =  this.clientName + '.' + this.staffForm.value.username;
+    this.staffForm.value.stores = this.selected;
     this.userService.backendValidation(this.staffForm.value.username,this.staffForm.value.email)
     .subscribe(
       response => {
@@ -101,6 +125,7 @@ export class AddStaffComponent implements OnInit {
         response => {
           console.log(response);
           this.submitted = true;
+          this.getSelectedValue();
           this.router.navigate(['/staff']);
           },
         error => {
@@ -171,4 +196,20 @@ export class AddStaffComponent implements OnInit {
                     console.log(error);
       });
     }  
+
+    changeFn(item: any) {
+      this.selected.push(item);
+    }
+
+    onItemSelect(item: any) {
+      this.selected.push(item);
+    }
+
+    onSelectAll(items: any) {
+      this.selected.push(items);
+    }
+
+    getSelectedValue(){
+      console.log(this.selected);
+    }
 }
