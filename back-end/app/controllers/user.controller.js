@@ -11,8 +11,10 @@ const sequelize = require("../config/seq.config.js");
 db.Sequelize = Sequelize;
 const transport = require("../config/email.config.js");
 const Plans = db.plans;
+const Stores = db.stores;
 const Template =  require("./item.controller.js");
 const elasticSearchController= require("../controllers/elasticsearch.controller.js");
+const staffStoreController= require("../controllers/userStore.controller.js");
 const { query } = require("express");
 var clientName = '';
 exports.allAccess = (req, res) => {
@@ -121,6 +123,7 @@ exports.createClient = (req, res) => {
     });
 };
 
+
 exports.saveClientStaff = (req, res) => {
   const clientName = req.params.clientName;
   const staff = {
@@ -130,10 +133,9 @@ exports.saveClientStaff = (req, res) => {
     status: req.body.status,
     clientFk: req.body.clientFk,
     roleId: req.body.roleId,
-    storeFk:req.body.storeFk,
     esUrl:''
   }; 
-  
+
   var hash = crypto.createHash('md5').update(staff.password).digest('hex');
   staff.password = hash;
   staff.esUrl=elasticSearchConfig.transport._config.host+"/rack/<RACK_NAME>_<RACK_PK>?routing="+staff.username+"/refresh=true";
@@ -141,6 +143,13 @@ exports.saveClientStaff = (req, res) => {
   // Save User in the database
   User.create(staff)
       .then(data => {
+        if(req.body.stores.length>0){
+          req.body.stores.forEach(store => {
+          req.body.storeFk=store.storeId;
+          req.body.userFk=data.id;
+          staffStoreController.addStaffToStore(req,res);
+          });
+        }
         console.log('sending email..');
         const message = {
           from: 'developers@electems.com',

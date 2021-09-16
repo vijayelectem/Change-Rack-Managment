@@ -25,12 +25,14 @@ db.clients = require("./client.model.js")(sequelize, Sequelize);
 db.plans = require("./plan.model.js")(sequelize, Sequelize);
 db.files = require("../models/file.model.js")(sequelize, Sequelize);
 db.locations = require("../models/location.model.js")(sequelize, Sequelize);
+db.userStore = require("../models/userStore.model.js")(sequelize, Sequelize);
 
 db.role.hasMany(db.user, { as: "users" });
 db.user.belongsTo(db.role, {
   foreignKey: "roleId",
   as: "role",
 });
+
 
 // db.products.belongsToMany(db.items, {
 //   through: "product_item",
