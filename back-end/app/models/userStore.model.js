@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
         onDelete:'Cascade',
       },
 
-      storeFk: {
+      storeId: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {         
